@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Books in Chizovka</string>
+    <string name="fact1">This app was created 19 March, 2023</string>
+    <string name="empty_list">There is no data!</string>
+    <string name="fact2">Author - Viktor Nikonenko</string>
+    <string name="fact3">This app was created with the help of Jetpack Compose</string>
+    <string name="factApp1">The links are clickable</string>
+    <string name="factApp2">With the help of this app you can buy and read books</string>
+    <string name="inst1">Instagram</string>
+    <string name="inst2">Our Instagram profile</string>
+    <string name="git1">GitHub</string>
+    <string name="git2">Project Git</string>
+    <string name="email1">Email</string>
+    <string name="email2">nikonenkokdoske@yandex.ru</string>
+    <string name="factsTitle">Facts about app:</string>
+    <string name="urlInst">https://www.instagram.com/lil_gantelya/</string>
+    <string name="urlGit">https://github.com/viktordiktor</string>
+    <string name="title_main">Main</string>
+    <string name="title_about">About</string>
+    <string name="title_edit">Edit</string>
+    <string name="title_add">Add</string>
+    <string name="label_book">Book: </string>
+    <string name="status_read">Read</string>
+    <string name="status_not_read">Not read</string>
+    <string name="add">Add book mark</string>
+    <string name="edit">Edit mark</string>
+    <string name="title">Title: </string>
+    <string name="author">Author: </string>
+    <string name="lastPage">Last Page: </string>
+    <string name="status">Status: </string>
+</resources>

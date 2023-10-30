@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="LibraryTheme" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/Black</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:statusBarColor">@color/Black</item>
+        <item name="fontFamily">sans-serif-light</item>
+    </style>
+
+
+
+
+</resources>
