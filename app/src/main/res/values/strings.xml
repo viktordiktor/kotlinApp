@@ -28,4 +28,5 @@
     <string name="author">Author: </string>
     <string name="lastPage">Last Page: </string>
     <string name="status">Status: </string>
+    <string name="edit_screen">edit_screen</string>
 </resources>

@@ -84,6 +84,8 @@ androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation
 androidx-navigation-dynamic-features-fragment = { group = "androidx.navigation", name = "navigation-dynamic-features-fragment", version = "2.7.4" }
 androidx-navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version = "2.7.4" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version = "2.7.4" }
+androidx-lifecycle-common = { group = "androidx.lifecycle", name = "lifecycle-common", version = "2.6.2" }
+androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version = "2.6.2" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }

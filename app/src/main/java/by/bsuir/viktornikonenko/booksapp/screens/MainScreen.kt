@@ -1,15 +1,19 @@
 package by.bsuir.viktornikonenko.booksapp.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
@@ -26,63 +30,62 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import by.bsuir.viktornikonenko.booksapp.viewmodels.BookNote
-import by.bsuir.viktornikonenko.booksapp.viewmodels.NoteViewModel
 import by.bsuir.viktornikonenko.booksapp.navigation.Screen
 import by.bsuir.viktornikonenko.booksapp.R
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import by.bsuir.viktornikonenko.booksapp.navigation.MemoriesNavigationActions
+import by.bsuir.viktornikonenko.booksapp.viewmodels.HomeViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import by.bsuir.viktornikonenko.booksapp.BookNote
+import java.util.UUID
 
 @Composable
-fun HomeScreen(navController: NavController, viewModel: NoteViewModel){
+fun MainScreen(navController: NavHostController, paddingValues: PaddingValues){
+    val viewModel: HomeViewModel = viewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    MaterialTheme {
-        val robotoFamily = FontFamily(
-            Font(R.font.roboto_light, FontWeight.Light),
-            Font(R.font.roboto_medium, FontWeight.Medium)
-        )
-        Column(horizontalAlignment = Alignment.CenterHorizontally,modifier = Modifier.fillMaxSize()){
-            HomeScreenContent(
-                items = viewModel.items,
-                onEdit = {navController.navigate("add_screen")},
-                onRemove = viewModel::onClickRemoveNote,
-                navController = navController
-            )
-            Button(onClick = {
-                navController.navigate(Screen.AddScreen.route)
-            }, modifier = Modifier.padding(vertical = 16.dp), colors =
-            ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){
-                Text(text = stringResource(id = R.string.add), fontSize = 20.sp, color = Color.DarkGray,
-                    fontFamily = robotoFamily,
-                    fontWeight = FontWeight.Medium)
-            }
-        }
-
+    val navActions: MemoriesNavigationActions = remember(navController) {
+        MemoriesNavigationActions(navController)
     }
+    val robotoFamily = FontFamily(
+        Font(R.font.roboto_light, FontWeight.Light),
+        Font(R.font.roboto_medium, FontWeight.Medium)
+    )
+    HomeScreenContent(
+        items = uiState.books,
+        onEdit = { memoryId ->
+            navActions.navigateToAddEditMemory(R.string.edit_screen, memoryId)
+        },
+        onRemove = {
+            viewModel.deleteBook(it)
+        },
+        navController = navController,
+        paddingValues = paddingValues
+    )
 }
 
 @Composable
 private fun HomeScreenContent(
-    items: SnapshotStateList<BookNote>,
-    onRemove: (BookNote) -> Unit,
-    onEdit: () -> Unit,
-    navController: NavController
+    items: List<BookNote>,
+    onRemove: (UUID) -> Unit,
+    onEdit: (UUID) -> Unit,
+    navController: NavController,
+    paddingValues: PaddingValues
 ) {
-    if(items.size!=0){
-        LazyColumn(modifier = Modifier.padding(bottom = 50.dp)){
-            itemsIndexed(items = items) { index, note ->
-                NoteItem(note = note, onRemove = onRemove, navController = navController, index = index)
-            }
-        }
-    }
-    else{
+    if(items.isEmpty()){
         Text(
             text = stringResource(id = R.string.empty_list),
             modifier = Modifier
@@ -91,15 +94,33 @@ private fun HomeScreenContent(
             fontSize = 50.sp
         )
     }
+    LazyColumn(
+        modifier = Modifier
+            .padding(paddingValues)
+            .fillMaxSize()
+
+    ) {
+        items(items = items) { item ->
+            NoteItem(
+                note = item,
+                onRemove = {
+                    onRemove(it)
+                },
+                onEdit = {
+                    onEdit(it)
+                }
+            )
+        }
+    }
 
 }
 
 @Composable
 private fun NoteItem(
     note: BookNote,
-    onRemove: (BookNote) -> Unit,
-    navController: NavController,
-    index: Int
+    onRemove: (UUID) -> Unit,
+    onEdit: (UUID) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val robotoFamily = FontFamily(
         Font(R.font.roboto_light, FontWeight.Light),
@@ -186,7 +207,7 @@ private fun NoteItem(
             IconButton(
                 onClick =
                 {
-                    navController.navigate(Screen.EditScreen.withArgs(index.toString()))
+                    onEdit(note.id)
                 }
             )
             {
@@ -202,7 +223,7 @@ private fun NoteItem(
             IconButton(
                 onClick =
                 {
-                    onRemove(note)
+                    onRemove(note.id)
                 }
             )
             {
